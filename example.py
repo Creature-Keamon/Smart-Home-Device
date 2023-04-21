@@ -1,13 +1,9 @@
-import wikipediaapi #imports wikipedia api
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials #imports required libraries
 
-wiki_wiki = wikipediaapi.Wikipedia('en', extract_format=wikipediaapi.ExtractFormat.WIKI) #sets language and extraction format
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="",
+                                                           client_secret="")) #connects to correct account
 
-
-page_py = wiki_wiki.page('Van Halen') #sets wikipedia page
-print("Page - Exists: %s" % page_py.exists()) #checks if it exists
-
-print("Page - Title: %s" % page_py.title) #prints page title
-
-print("Page - Summary: %s" % page_py.summary[0:400]) #prints first 400 characters about the topic
-
-print(page_py) #prints entire page
+results = sp.search(q='Sleep Token', limit=5) #selects artists and track limit
+for idx, track in enumerate(results['tracks']['items']): #collects the top 5 tracks of selected artist
+    print(idx, track['name']) #prints the tracks
