@@ -7,6 +7,29 @@ mic = sr.Microphone()
 r = sr.Recognizer()
 bot = ChatGPT()
 
+async def getweather(): # defines "get weather"
+  import python_weather
+  import asyncio
+  import os #imports weather libraries
+  # declare the client
+  async with python_weather.Client(format=python_weather.METRIC) as client:
+
+    # fetch a weather forecast from a city
+    weather = await client.get("Christchurch")
+  
+    # returns the current day's forecast temperature (int)
+    print(weather.current.temperature)
+  
+    # get the weather forecast for a few days
+    for forecast in weather.forecasts:
+      print(forecast.date, forecast.astronomy)
+
+    if __name__ == "__main__":
+      if os.name == "nt":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+      asyncio.run(getweather())
+
 #sets the active state variable to false
 active_state = False
 
@@ -47,9 +70,13 @@ if active_state == True:
     print(request)
     str(request)
 
-    #if the request was end talk, then the code stops
     if request == "end talk":
-        print ("ending talk")
+        print ("ending talk")    #if the request was end talk, then the code stops
+
+
+  except:
+      print("I couldn't understand")   #prints this if it can't understand
+
 
     #sends chatgpt the request and saves it as a variable
     response = bot.ask(request)
@@ -61,37 +88,3 @@ if active_state == True:
     engine.say(response)
     engine.runAndWait()
 
-  #prints this if it can't understand
-  except:
-      print("I couldn't understand")
-
-
-
-
-import python_weather
-import asyncio
-import os #imports everything
-
-async def getweather():
-  # declare the client
-  async with python_weather.Client(format=python_weather.METRIC) as client:
-
-    # fetch a weather forecast from a city
-    weather = await client.get("Christchurch")
-  
-    # returns the current day's forecast temperature (int)
-    print(weather.current.temperature)
-  
-    # get the weather forecast for a few days
-    for forecast in weather.forecasts:
-      print(forecast.date, forecast.astronomy)
-  
-      # hourly forecasts
-      for hourly in forecast.hourly:
-        print(f' --> {hourly!r}')
-
-if __name__ == "__main__":
-  if os.name == "nt":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-  asyncio.run(getweather())
