@@ -2,6 +2,7 @@
 import speech_recognition as sr
 from chatgpt_wrapper import ChatGPT
 import pyttsx3
+import asyncio
 engine = pyttsx3.init()
 mic = sr.Microphone()
 r = sr.Recognizer()
@@ -9,13 +10,12 @@ bot = ChatGPT()
 
 async def getweather(): # defines "get weather"
   import python_weather
-  import asyncio
   import os #imports weather libraries
   # declare the client
   async with python_weather.Client(format=python_weather.METRIC) as client:
 
     # fetch a weather forecast from a city
-    weather = await client.get("Christchurch")
+    weather = await client.get("Christchurch") # Christchurch is temporary
   
     # returns the current day's forecast temperature (int)
     print(weather.current.temperature)
