@@ -33,6 +33,10 @@ async def getweather(): # defines "get weather"
 #sets the active state variable to false
 active_state = False
 
+
+getweather()
+
+
 #defines the function "passive_listen"
 def passive_listen(state): 
 
@@ -79,12 +83,12 @@ if active_state == True:
 
 
     #sends chatgpt the request and saves it as a variable
-    response = bot.ask(request)
+      response = bot.ask(request)
     
     #prints the response from chatGPT
-    print(response) 
+      print(response) 
     
     #makes chatgpt say the output
-    engine.say(response)
-    engine.runAndWait()
+      engine.say(response)
+      engine.runAndWait()
 
