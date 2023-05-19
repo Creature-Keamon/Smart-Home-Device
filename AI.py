@@ -1,40 +1,33 @@
 #sets everything up
 import speech_recognition as sr
-from chatgpt_wrapper import ChatGPT
 import pyttsx3
 import asyncio
+import python_weather
+import os
 engine = pyttsx3.init()
 mic = sr.Microphone()
 r = sr.Recognizer()
-bot = ChatGPT()
+location = "Rolleston"
 
 async def getweather(): # defines "get weather"
-  import python_weather
-  import os #imports weather libraries
+
   # declare the client
-  async with python_weather.Client(format=python_weather.METRIC) as client:
+  async with python_weather.Client(unit=python_weather.METRIC) as client:
 
     # fetch a weather forecast from a city
-    weather = await client.get("Christchurch") # Christchurch is temporary
+    weather = await client.get("Rolleston") # Christchurch is temporary
   
     # returns the current day's forecast temperature (int)
-    print(weather.current.temperature)
-  
-    # get the weather forecast for a few days
-    for forecast in weather.forecasts:
-      print(forecast.date, forecast.astronomy)
+    print("Weather in ", location, " is ", weather.current.temperature, " degrees")
 
-    if __name__ == "__main__":
-      if os.name == "nt":
+if __name__ == "__main__":
+    if os.name == "nt":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-      asyncio.run(getweather())
-
+    
+    asyncio.run(getweather())
+ 
 #sets the active state variable to false
 active_state = False
-
-
-getweather()
 
 
 #defines the function "passive_listen"
@@ -77,18 +70,20 @@ if active_state == True:
     if request == "end talk":
         print ("ending talk")    #if the request was end talk, then the code stops
 
+    if request != "end talk":
+      #makes AI say the output
+      engine.say(request)
+      engine.runAndWait()
+        
+      if request == "weather":
+          if __name__ == "__main__":
+                if os.name == "nt":
+                    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    
+                asyncio.run(getweather()) #runs getweather() if the request is weather
 
   except:
       print("I couldn't understand")   #prints this if it can't understand
 
-
-    #sends chatgpt the request and saves it as a variable
-      response = bot.ask(request)
     
-    #prints the response from chatGPT
-      print(response) 
-    
-    #makes chatgpt say the output
-      engine.say(response)
-      engine.runAndWait()
 
