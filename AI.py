@@ -3,8 +3,11 @@ import speech_recognition as sr
 import pyttsx3
 import asyncio
 import python_weather
+import tekore as tk
 import os
 engine = pyttsx3.init()
+client_id = 'your_id_here'
+
 mic = sr.Microphone()
 r = sr.Recognizer()
 location = "Rolleston"
@@ -18,16 +21,14 @@ async def getweather(): # defines "get weather"
     weather = await client.get("Rolleston") # Christchurch is temporary
   
     # returns the current day's forecast temperature (int)
-    print("Weather in ", location, " is ", weather.current.temperature, " degrees")
+    weather_script = "Weather in ", location, " is ", weather.current.temperature, " degrees"
 
-if __name__ == "__main__":
-    if os.name == "nt":
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    
-    asyncio.run(getweather())
- 
+    print (weather_script)
+
 #sets the active state variable to false
 active_state = False
+
+def spotify_function():
 
 
 #defines the function "passive_listen"
@@ -50,8 +51,10 @@ def passive_listen(state):
 
       if request == "hey frank": #checks if request was "hey frank"
          return state == True #returns "True" if request was hey frank
-      
+ 
+     
 active_state = passive_listen(active_state) #calls passive_listen, setting the active state variable's value and passive it's initial value through
+
 
 if active_state == True:
 
@@ -81,9 +84,12 @@ if active_state == True:
                     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
                 asyncio.run(getweather()) #runs getweather() if the request is weather
+              
+        
+      if request == "music":
 
   except:
-      print("I couldn't understand")   #prints this if it can't understand
+    print("I couldn't understand")   #prints this if it can't understand
 
     
 
