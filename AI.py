@@ -1,34 +1,59 @@
-#sets everything up
+#imports  libraries
 import speech_recognition as sr
 import pyttsx3
 import asyncio
 import python_weather
 import tekore as tk
 import os
-engine = pyttsx3.init()
-client_id = 'your_id_here'
+from chatgpt_wrapper import ChatGPT
 
+#sets everything up
+bot = ChatGPT()
+engine = pyttsx3.init()
+client_id = 'b09f34e772a444288af5ac9f7628958c'
+client_secret = '90732bb485e14c3baa00a02a6fa1fb87'
+app_token = tk.request_client_token(client_id, client_secret)
 mic = sr.Microphone()
 r = sr.Recognizer()
 location = "Rolleston"
+response = "empty"
+weatheroutput = "empty"
+tracklist = "empty"
 
-async def getweather(): # defines "get weather"
+async def getweather(weather_script): # defines "get weather"
 
   # declare the client
   async with python_weather.Client(unit=python_weather.METRIC) as client:
 
     # fetch a weather forecast from a city
-    weather = await client.get("Rolleston") # Christchurch is temporary
+    weather = await client.get("Rolleston") # Rolleston is temporary
   
     # returns the current day's forecast temperature (int)
     weather_script = "Weather in ", location, " is ", weather.current.temperature, " degrees"
 
     print (weather_script)
+    return weather_script
 
 #sets the active state variable to false
 active_state = False
 
-def spotify_function():
+def chat(input,output):
+    #sends chatgpt the request and saves it as a variable
+    output = bot.ask(input)
+        
+    #prints the response from chatGPT
+    print(output) 
+
+
+def spotify_function(token, tracks):
+    # Call the API
+    spotify = tk.Spotify(token)
+    album = spotify.album('3RBULTZJ97bvVzZLpxcB0j') # recieves data about this album
+
+    # Use the response
+    for track in album.tracks.items:
+        tracks = (track.track_number, track.name)
+        print(tracks)
 
 
 #defines the function "passive_listen"
@@ -83,10 +108,16 @@ if active_state == True:
                 if os.name == "nt":
                     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
-                asyncio.run(getweather()) #runs getweather() if the request is weather
+                asyncio.run(getweather(weatheroutput)) #runs getweather() if the request is weather
               
         
       if request == "music":
+          spotify_function(app_token, tracklist)
+
+      if "chatgpt" in request:
+          chat(request, response)
+          engine.say(response)
+          engine.runAndWait()
 
   except:
     print("I couldn't understand")   #prints this if it can't understand

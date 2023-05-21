@@ -1,9 +1,13 @@
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials #imports required libraries
+import tekore as tk
 
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="",
-                                                           client_secret="")) #connects to correct account
+conf = tk.config_from_environment()
+scope = tk.scope.user_top_read
+token = tk.prompt_for_user_token(*conf, scope=scope)
 
-results = sp.search(q='Sleep Token', limit=5) #selects artists and track limit
-for idx, track in enumerate(results['tracks']['items']): #collects the top 5 tracks of selected artist
-    print(idx, track['name']) #prints the tracks
+spotify = tk.Spotify(token)
+artist = spotify.current_user_top_artists(limit=1).items[0]
+albums = spotify.artist_albums(artist.id)
+
+print(f'Albums of {artist.name}:')
+for a in albums.items:
+    print(a.release_date, a.name)

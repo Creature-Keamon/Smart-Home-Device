@@ -1,12 +1,24 @@
-import tekore as tk #imports tekore
+import tekore as tk
 
-client_id = '' #establishes client id
-client_secret = '' #establishes the client secret id
+client_id = 'b09f34e772a444288af5ac9f7628958c'
+client_secret = '90732bb485e14c3baa00a02a6fa1fb87'
+redirect_uri = 'https://example.com/callback'
 
-app_token = tk.request_client_token(client_id, client_secret) #collects a client token, used to make basic calls
+conf = tk.config_from_environment()
+scope = tk.scope.user_top_read + tk.scope.playlist_modify_private
+token = tk.prompt_for_user_token(client_id, client_secret, redirect_uri, scope=scope)
 
-spotify = tk.Spotify(app_token) #creates spotify object
+spotify = tk.Spotify(token)
+top_tracks = spotify.current_user_top_tracks(limit=5).items
+top_track_ids = [t.id for t in top_tracks]
+recommendations = spotify.recommendations(track_ids=top_track_ids).tracks
 
-album = spotify.album('4SD2UxRO9OgeSCQK0PN7cC') #sets album to Sleep Token's "This Place Will Become Your Tomb"
-for track in album.tracks.items:
-    print(track.track_number, track.name) #prints tracklisting 
+user = spotify.current_user()
+playlist = spotify.playlist_create(
+    user.id,
+    'Tekore Recommendations',
+    public=False,
+    description='Recommendations based on your top tracks <3'
+)
+uris = [t.uri for t in recommendations]
+spotify.playlist_add(playlist.id, uris=uris)
