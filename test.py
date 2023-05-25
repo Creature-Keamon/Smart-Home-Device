@@ -12,7 +12,7 @@ album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
 for track in album.tracks.items:
     print(track.track_number, track.name)
 
-redirect_uri = 'https://example.com/callback'
+redirect_uri = 'https://sites.google.com/rollestoncollege.nz/shawnhub-org/home'
 
 user_token = tk.prompt_for_user_token(
     client_id,
