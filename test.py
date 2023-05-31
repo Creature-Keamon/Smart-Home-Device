@@ -6,20 +6,15 @@ token = tk.request_client_token(client_id, client_secret)
 
 # Call the API
 spotify = tk.Spotify(token)
-album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
+album = spotify.album('1gjugH97doz3HktiEjx2vY?si=gSMjFaPaSQKMORROu8VcsQ')
 
 # Use the response
 for track in album.tracks.items:
     print(track.track_number, track.name)
 
-redirect_uri = 'https://sites.google.com/rollestoncollege.nz/shawnhub-org/home'
+redirect_uri = 'https://youtube.com'
 
-user_token = tk.prompt_for_user_token(
-    client_id,
-    client_secret,
-    redirect_uri,
-    scope=tk.scope.every
-)
+user_token = tk.prompt_for_user_token(client_id, client_secret, redirect_uri, scope=tk.scope.every)
 
 conf = tk.config_from_file('tekore.cfg', return_refresh=True)
 user_token = tk.refresh_user_token(*conf[:2], conf[3])
