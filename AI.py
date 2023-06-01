@@ -5,10 +5,10 @@ import asyncio
 import python_weather
 import tekore as tk
 import os
-from chatgpt_wrapper import ChatGPT
+import chatgpt_wrapper
 
 #sets everything up
-bot = ChatGPT()
+bot = chatgpt_wrapper()
 engine = pyttsx3.init()
 client_id = 'b09f34e772a444288af5ac9f7628958c'
 client_secret = '90732bb485e14c3baa00a02a6fa1fb87'
