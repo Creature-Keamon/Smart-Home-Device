@@ -5,10 +5,17 @@ import asyncio
 import python_weather
 import tekore as tk
 import os
-import chatgpt_wrapper
+from chatgpt_wrapper import ApiBackend
+
+
+success, response, message = bot.ask("Hello, world!")
+if success:
+    print(response)
+else:
+    raise RuntimeError(message)
 
 #sets everything up
-bot = chatgpt_wrapper()
+bot = ApiBackend()
 engine = pyttsx3.init()
 client_id = 'b09f34e772a444288af5ac9f7628958c'
 client_secret = '90732bb485e14c3baa00a02a6fa1fb87'
@@ -20,13 +27,13 @@ response = "empty"
 weatheroutput = "empty"
 tracklist = "empty"
 
-async def getweather(weather_script): # defines "get weather"
+async def getweather(weather_script, location): # defines "get weather"
 
   # declare the client
   async with python_weather.Client(unit=python_weather.METRIC) as client:
 
     # fetch a weather forecast from a city
-    weather = await client.get("Rolleston") # Rolleston is temporary
+    weather = await client.get(location) # Rolleston is temporary
   
     # returns the current day's forecast temperature (int)
     weather_script = "Weather in ", location, " is ", weather.current.temperature, " degrees"
@@ -108,7 +115,7 @@ if active_state == True:
                 if os.name == "nt":
                     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
-                asyncio.run(getweather(weatheroutput)) #runs getweather() if the request is weather
+                asyncio.run(getweather(weatheroutput, location)) #runs getweather() if the request is weather
               
         
       if request == "music":

@@ -1,9 +1,10 @@
-from chatgpt_wrapper import ChatGPT
+from chatgpt_wrapper import ApiBackend
+bot = ApiBackend()
 
-bot = ChatGPT()
+success, response, message = bot.ask("Hello, world!")
+if success:
+    print(response)
+else:
+    raise RuntimeError(message)
 
-#sends chatgpt the request and saves it as a variable
- response = bot.ask(request)
-    
-    #prints the response from chatGPT
-      print(response) 
+#sets everything up
