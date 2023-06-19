@@ -44,13 +44,6 @@ async def getweather(weather_script, location): # defines "get weather"
 #sets the active state variable to false
 active_state = False
 
-def chat(input,output):
-    #sends chatgpt the request and saves it as a variable
-    output = bot.ask(input)
-        
-    #prints the response from chatGPT
-    print(output) 
-
 
 def spotify_function(token, tracks):
     # Call the API
@@ -120,11 +113,6 @@ if active_state == True:
         
       if request == "music":
           spotify_function(app_token, tracklist)
-
-      if "chatgpt" in request:
-          chat(request, response)
-          engine.say(response)
-          engine.runAndWait()
 
   except:
     print("I couldn't understand")   #prints this if it can't understand
