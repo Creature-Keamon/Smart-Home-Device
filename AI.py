@@ -3,23 +3,11 @@ import speech_recognition as sr
 import pyttsx3
 import asyncio
 import python_weather
-import tekore as tk
 import os
-from chatgpt_wrapper import ApiBackend
 
-
-success, response, message = bot.ask("Hello, world!")
-if success:
-    print(response)
-else:
-    raise RuntimeError(message)
 
 #sets everything up
-bot = ApiBackend()
 engine = pyttsx3.init()
-client_id = 'b09f34e772a444288af5ac9f7628958c'
-client_secret = '90732bb485e14c3baa00a02a6fa1fb87'
-app_token = tk.request_client_token(client_id, client_secret)
 mic = sr.Microphone()
 r = sr.Recognizer()
 location = "Rolleston"
@@ -43,18 +31,6 @@ async def getweather(weather_script, location): # defines "get weather"
 
 #sets the active state variable to false
 active_state = False
-
-
-def spotify_function(token, tracks):
-    # Call the API
-    spotify = tk.Spotify(token)
-    album = spotify.album('3RBULTZJ97bvVzZLpxcB0j') # recieves data about this album
-
-    # Use the response
-    for track in album.tracks.items:
-        tracks = (track.track_number, track.name)
-        print(tracks)
-
 
 #defines the function "passive_listen"
 def passive_listen(state): 
@@ -109,10 +85,6 @@ if active_state == True:
                     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
                 asyncio.run(getweather(weatheroutput, location)) #runs getweather() if the request is weather
-              
-        
-      if request == "music":
-          spotify_function(app_token, tracklist)
 
   except:
     print("I couldn't understand")   #prints this if it can't understand
