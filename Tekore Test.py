@@ -12,14 +12,14 @@ album = spotify.album('1gjugH97doz3HktiEjx2vY?si=gSMjFaPaSQKMORROu8VcsQ')
 for track in album.tracks.items:
     print(track.track_number, track.name)
 
-redirect_uri = 'https://youtube.com'
+redirect_uri = 'http://192.168.1.79/'
 
 user_token = tk.prompt_for_user_token(client_id, client_secret, redirect_uri, scope=tk.scope.every)
 
-conf = tk.config_from_file('tekore.cfg', return_refresh=True)
-user_token = tk.refresh_user_token(*conf[:2], conf[3])
-
 conf = (client_id, client_secret, redirect_uri, user_token.refresh_token)
 tk.config_to_file('tekore.cfg', conf)
+
+conf = tk.config_from_file('tekore.cfg', return_refresh=True)
+user_token = tk.refresh_user_token(*conf[:2], conf[3])
 
 spotify.playback_start_tracks('2Gt7fjNlx901pPRkvBiNBZ?si=9a9b8c9ca1634041')
