@@ -29,3 +29,12 @@ tensor = tf.constant([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]], [[13, 1
 print(tensor)
 
 tensor.ndim
+
+tf.Variable
+
+changeable_tensor = tf.Variable([10, 7])
+unchangeable_tensor = tf.constant([10, 7])
+
+changeable_tensor[0].assign(7)
+
+unchangeable_tensor[0].assign(7)
