@@ -42,3 +42,12 @@ tensor = tf.constant([[10, 7], [3, 4]])
 
 tensor + 10 # adds 10 to every element in the tensor
 tf.add(tensor, 10) # does the same
+
+
+#matrix multiplication
+
+matrix_1 = tf.constant([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+matrix_2 = tf.constant([[4, 78, 54], [4, 1, 6], [7, 9, 32]])
+tf.matmul(matrix_1, matrix_2)
+
+tf.reshape(matrix_1, shape=(3, 3))
