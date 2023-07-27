@@ -38,3 +38,7 @@ rank_3_tensor = rank_2_tensor[..., tf.newaxis]
 
 tf.expand_dims(rank_2_tensor, axis=-1)
 
+tensor = tf.constant([[10, 7], [3, 4]])
+
+tensor + 10 # adds 10 to every element in the tensor
+tf.add(tensor, 10) # does the same
