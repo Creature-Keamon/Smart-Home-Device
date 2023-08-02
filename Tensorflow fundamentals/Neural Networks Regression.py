@@ -22,16 +22,17 @@ tf.random.set_seed(42)
 
 #Step 1. creating a model
 model = tf.keras.Sequential([ #"provides training and inference features for the model"
+    tf.keras.layers.Dense(100, activation ="relu"),
     tf.keras.layers.Dense(1)
     ])
 
 #Step 2. Compile the model
 model.compile(loss=tf.keras.losses.mae, #mae = mean absolute error
-              optimizer=tf.keras.optimizers.SGD(), #SGD = stochastic gradient descent (tells model how it should improve)
+              optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), #SGD = stochastic gradient descent (tells model how it should improve)
               metrics=["mae"])
 
 #Step 3. fit the model
-model.fit(tf.expand_dims(X, axis=-1), y, epochs=400) #makes model figures out the relationship between X and y
+model.fit(tf.expand_dims(X, axis=-1), y, epochs=150) #makes model figures out the relationship between X and y
 
 #make a prediction with the model (what value of y does it think will be when X is 17)
 y_prediction = model.predict([17.0])
