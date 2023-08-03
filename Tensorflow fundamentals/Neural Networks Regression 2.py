@@ -10,10 +10,6 @@ X = tf.range(-100, 100, 4)
 #create labels (Y axis)
 y = X + 10
 
-#visualise data
-plt.scatter(X, y)
-
-
 #create a seed
 tf.random.set_seed(42)
 
