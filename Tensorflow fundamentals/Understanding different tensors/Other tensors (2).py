@@ -51,3 +51,14 @@ matrix_2 = tf.constant([[4, 78, 54], [4, 1, 6], [7, 9, 32]])
 tf.matmul(matrix_1, matrix_2)
 
 tf.reshape(matrix_1, shape=(3, 3))
+
+#visualise data
+plt.figure(figsize=(10, 7))
+
+#plot training data
+plt.scatter(X_train, y_train, c="g", label="Training data")
+
+#plot testing data
+plt.scatter(X_test, y_test, c="r", label="Testing data")
+
+plt.show()

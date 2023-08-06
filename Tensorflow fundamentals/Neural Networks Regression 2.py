@@ -10,27 +10,25 @@ X = tf.range(-100, 100, 4)
 #create labels (Y axis)
 y = X + 10
 
-#visualise data
-plt.scatter(X, y)
+#creating test and training data
+X_train = X[:40] #first 40 numbers from X becomes the training data (80%)
+X_test = X[40:]#last 10 numbers from X becomes testing data (20%)
+y_train = y[:40] #same as above but for y
+y_test = y[40:] #same as above but for y
 
-
-#create a seed
+# 1 create the model (this one can build automatically by setting it's shape)
 tf.random.set_seed(42)
 
-#Step 1. creating a model
-model = tf.keras.Sequential([ #"provides training and inference features for the model"
-    tf.keras.layers.Dense(100, activation ="relu"),
-    tf.keras.layers.Dense(1)
-    ])
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_shape=[1])
+ ])
 
-#Step 2. Compile the model
-model.compile(loss=tf.keras.losses.mae, #mae = mean absolute error
-              optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), #SGD = stochastic gradient descent (tells model how it should improve)
+# 2 compile the model
+model.compile(loss=tf.keras.losses.mae,
+              optimizer= tf.keras.optimizers.SGD(),
               metrics=["mae"])
 
-#Step 3. fit the model
-model.fit(tf.expand_dims(X, axis=-1), y, epochs=150) #makes model figures out the relationship between X and y
+model.summary()
 
-#make a prediction with the model (what value of y does it think will be when X is 17)
-y_prediction = model.predict([17.0])
-print(y_prediction)
+# 3 fit the model
+#model.fit(X_train, y_train, epochs=100)
