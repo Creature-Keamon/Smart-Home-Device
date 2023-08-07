@@ -14,12 +14,12 @@ with open('spam.csv', 'r') as dataset:
     csv_reader = csv.reader(dataset)
     
     for line in csv_reader:
-        labels = line[0]
-        message = line[1]
+        labels.append(line[0])
+        message.append(line[1])
 
-        for ham in labels:
+        if ham in labels:
                 labels_int.append(1)
-        for spam in labels:
+        if spam in labels:
                 labels_int.append(0)
 
 message_list = list(message)
