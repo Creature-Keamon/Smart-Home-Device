@@ -1,51 +1,46 @@
 import tensorflow as tf
-import csv
 import json
 from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 
-label = []
-data = []
+verdict = []
+speaker = []
+statement = []
+date = []
+source = []
+fact_checker = []
+check_date = []
+analysis_link = []
+verdict_int = []
 
-import csv
+#loads json file
+dataset = [json.loads(line) for line in open('Sarcasm_Headlines_Dataset_v2.json', 'r')]
 
-import csv
+#splits up the information in the json file and saves it in lists 
+for item in dataset:
+    verdict.append(item['verdict'])
+    speaker.append(item['statement_originator'])
+    statement.append(item['statement'])
+    date.append(item['statement_date'])
+    source.append(item['statement_source'])
+    fact_checker.append(item['factchecker'])
+    check_date.append(item['factcheck_date'])
+    analysis_link.append(item['factcheck_analysis_link'])
 
-def import_csv_file(file_path):
-    data_lists = {}  # Dictionary to store the data as lists
+    #adds integers to a list based on verdict
+    for item in verdict:
+        if item == "false":
+            verdict_int.append(item[1])
+        elif item == "pants-fire":
+            verdict_int.append(item[0])
+        elif item == "mostly-false":
+            verdict_int.append(item[2])
+        elif item == "half-true":
+            verdict_int.append(item[3])
+        elif item == "mostly-true":
+            verdict_int.append(item[4])
+        elif item =="true":
+            verdict_int.append(item[5])
 
-    with open(file_path, 'r', newline='') as csvfile:
-        csvreader = csv.reader(csvfile)
-        headers = next(csvreader)  # Get the header row
-
-        # Initialize lists for each column
-        for header in headers:
-            data_lists[header] = []
-
-        # Append data to respective lists
-        for row in csvreader:
-            for idx, value in enumerate(row):
-                data_lists[headers[idx]].append(value)
-
-    # Convert dictionary values to separate lists
-    column_lists = list(data_lists.values())
-
-    return column_lists
-
-if __name__ == "__main__":
-    file_path = "lingSpam.csv"  # Replace with your CSV file path
-    column_lists = import_csv_file(file_path)
-
-    # Access data in separate lists by index
-    label = column_lists[0]
-    commas = column_lists[1]
-    data = column_lists[2]
-
-    # Print the separate lists
-    print("Name List:", name_list)
-    print("Age List:", age_list)
-   
-
-    
-
-print (label)
+training_verdicts = verdict_int[:16922]
+testing_verdicts = verdict_int[16922:]
