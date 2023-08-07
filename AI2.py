@@ -21,7 +21,8 @@ with open('spam.csv', 'r') as dataset:
                 labels_int.append(1)
         for spam in labels:
                 labels_int.append(0)
-        else:
-           print("bug")
 
-print(labels_int, message)
+message_list = list(message)
+
+for x in range(len(labels_int)):
+    print(labels_int[x], message_list[x])
