@@ -17,12 +17,11 @@ with open('spam.csv', 'r') as dataset:
         labels.append(line[0])
         message.append(line[1])
 
-        if ham in labels:
+        for ham in line:
                 labels_int.append(1)
-        if spam in labels:
+        for spam in line:
                 labels_int.append(0)
 
 message_list = list(message)
 
-for x in range(len(labels_int)):
-    print(labels_int[x], message_list[x])
+print(labels_int[3],",", message_list[3])
