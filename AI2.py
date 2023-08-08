@@ -36,4 +36,4 @@ X_test = message[4460:]
 y_train = labels_int[:4460]
 y_test = labels_int[4460:]
 
-tokenizer = Tokenizer(num_words = )
+tokenizer = Tokenizer
