@@ -6,8 +6,6 @@ from keras.utils import pad_sequences
 labels_str = []
 message = []
 labels_int = []
-ham = "ham"
-spam = "spam"
 
 #loads dataset
 with open('spam.csv', 'r') as dataset:
@@ -36,4 +34,4 @@ X_test = message[4460:]
 y_train = labels_int[:4460]
 y_test = labels_int[4460:]
 
-tokenizer = Tokenizer
+tokenizer = Tokenizer()
