@@ -32,7 +32,7 @@ model.compile(loss=tf.keras.losses.mae, #mae = mean absolute error
               metrics=["mae"])
 
 #Step 3. fit the model
-model.fit(tf.expand_dims(X, axis=-1), y, epochs=150) #makes model figures out the relationship between X and y
+model.fit(tf.expand_dims(X, axis=-1), y, epochs=100) #makes model figures out the relationship between X and y
 
 #make a prediction with the model (what value of y does it think will be when X is 17)
 y_prediction = model.predict([17.0])
