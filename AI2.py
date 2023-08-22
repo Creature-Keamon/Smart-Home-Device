@@ -2,12 +2,11 @@ import tensorflow as tf
 import csv
 from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
+import numpy as np
 
 labels_str = []
 message = []
 labels_int = []
-ham = "ham"
-spam = "spam"
 
 #loads dataset
 with open('spam.csv', 'r') as dataset:
@@ -36,4 +35,8 @@ X_test = message[4460:]
 y_train = labels_int[:4460]
 y_test = labels_int[4460:]
 
-tokenizer = Tokenizer
+#generates tokenizerand configures it
+tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
+tokenizer.fit_on_texts(X_train)
+word_index = tokenizer.word_index
+training_sequences = tokenizer.texts_to_sequences(X_train)
