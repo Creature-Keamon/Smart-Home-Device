@@ -37,6 +37,12 @@ y_test = labels_int[4460:]
 
 #generates tokenizerand configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
+
+#creates internal knowledge about vocabulary
 tokenizer.fit_on_texts(X_train)
+
+#tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
+
+
 training_sequences = tokenizer.texts_to_sequences(X_train)

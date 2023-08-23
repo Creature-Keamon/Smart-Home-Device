@@ -20,8 +20,7 @@ y_test = y[40:] #same as above but for y
 # 1 create the model (this one can build automatically by setting it's shape)
 model = tf.keras.Sequential([
     tf.keras.layers.Dense(1, input_shape=[1], name="input"),
-    tf.keras.layers.Dense(1, input_shape=[1], name="middle_man"),
-    tf.keras.layers.Dense(1, input_shape=[1], name="output")], name = 'hello.guys.its.me')
+    ])
 
 # 2 compile the model
 model.compile(loss=tf.keras.losses.mae,
@@ -29,10 +28,26 @@ model.compile(loss=tf.keras.losses.mae,
               metrics=["mae"])
 
 # 3 fit the model
-model.fit(X_train, y_train, epochs=100, verbose=1)
+model.fit(X_train, y_train, epochs=500, verbose=1)
 
 #view the summary of the model
 model.summary()
 
 #creates a summary as a jpg file  
 tf.keras.utils.plot_model(model=model, to_file = 'test_model.jpg', show_shapes =True)
+
+#make the model predict what the y vales will be compared to X
+y_pred = model.predict(X_test)
+
+def plot_predictions(train_data=X_train, train_labels=y_train, test_data=X_test, test_labels=y_test, predictions= y_pred):
+    plt.figure(figsize=(7,4))
+    #plot training data
+    plt.scatter(train_data, train_labels, c="b", label="Training data")
+    #plot testing data
+    plt.scatter(test_data,test_labels, c="g", label= "Testing data")
+    #plot prediction vs testing
+    plt.scatter(test_data, predictions, c="r", label="Predictions")
+    plt.legend();
+    plt.show()
+    
+plot_predictions(train_data=X_train, train_labels=y_train, test_data=X_test, test_labels=y_test, predictions= y_pred)
