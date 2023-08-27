@@ -39,6 +39,7 @@ tf.keras.utils.plot_model(model=model, to_file = 'test_model.jpg', show_shapes =
 #make the model predict what the y vales will be compared to X
 y_pred = model.predict(X_test)
 
+#define the plot function
 def plot_predictions(train_data=X_train, train_labels=y_train, test_data=X_test, test_labels=y_test, predictions= y_pred):
     plt.figure(figsize=(7,4))
     #plot training data
@@ -51,3 +52,12 @@ def plot_predictions(train_data=X_train, train_labels=y_train, test_data=X_test,
     plt.show()
     
 plot_predictions(train_data=X_train, train_labels=y_train, test_data=X_test, test_labels=y_test, predictions= y_pred)
+
+#evaluating the model on test data, OUTPUT(<loss function>, <evaluation metric>)
+model.evaluate(X_test, y_test)
+
+#calculate the mean absolute error (MAE) between test and predictions
+mae = tf.keras.losses.MAE(y_true=y_test, y_pred=tf.squeeze(y_pred))
+
+#calculate the mean square error (MSE) between test and predictions
+mse = tf.keras.losses.MSE(y_true=y_test, y_pred=tf.squeeze(y_pred))
