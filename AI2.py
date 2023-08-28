@@ -44,5 +44,18 @@ tokenizer.fit_on_texts(X_train)
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
 
-
+#creates sequence of numbers which correlate to the words in the line
 training_sequences = tokenizer.texts_to_sequences(X_train)
+
+#adds '0s' to the end of the sequences to ensure that they are all equal length
+training_padded = pad_sequences(training_sequences, 
+                                padding='post',
+                                filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
+                                value="float")
+
+#same as above
+testing_sequences = tokenizer.texts_to_sequences(X_test)
+testing_padded = pad_sequences(testing_sequences, 
+                               padding='post',
+                               filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
+                               value="float")
