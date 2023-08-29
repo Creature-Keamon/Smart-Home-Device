@@ -42,6 +42,8 @@ word_index = tokenizer.word_index
 #creates a sequence of numbers correlating to the words
 training_sequences = tokenizer.texts_to_sequences(training_sentences)
 
+print(training_sequences)
+
 #pads sequences with '0' to ensure that all sequences are equal length
 training_padded = pad_sequences(training_sequences, padding=padding_type, truncating=trunc_type)
 
