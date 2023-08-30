@@ -31,9 +31,12 @@ labels_int = tf.constant(labels_int)
 
 #prepares data to be used in the neural network
 X_train = message[:4460]
-X_test = message[4460:]
+X_test = message[4460:5573]
+X_pred = message[5573:]
 y_train = labels_int[:4460]
-y_test = labels_int[4460:]
+y_test = labels_int[4460:5573]
+y_pred = labels_int[5573:]
+
 
 #generates tokenizerand configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
@@ -55,6 +58,11 @@ training_padded = pad_sequences(training_sequences,
 testing_sequences = tokenizer.texts_to_sequences(X_test)
 testing_padded = pad_sequences(testing_sequences, 
                                padding='post')
+
+#same as above but for prediction
+prediction_sequence = tokenizer.texts_to_sequences(X_pred)
+prediction_padded = pad_sequences(prediction_sequence,
+                                padding='post')
 
 #creates arrays for every value that will be used
 training_padded = np.array(training_padded)
