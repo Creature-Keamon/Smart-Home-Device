@@ -32,10 +32,10 @@ labels_int = tf.constant(labels_int)
 #prepares data to be used in the neural network
 X_train = message[:4460]
 X_test = message[4460:5573]
-X_pred = message[5573:]
+X_pred = message[5572:]
 y_train = labels_int[:4460]
 y_test = labels_int[4460:5573]
-y_pred = labels_int[5573:]
+y_pred = labels_int[5572:]
 
 
 #generates tokenizerand configures it
@@ -61,8 +61,6 @@ testing_padded = pad_sequences(testing_sequences,
 
 #same as above but for prediction
 prediction_sequence = tokenizer.texts_to_sequences(X_pred)
-prediction_padded = pad_sequences(prediction_sequence,
-                                padding='post')
 
 #creates arrays for every value that will be used
 training_padded = np.array(training_padded)
@@ -89,20 +87,17 @@ model.compile(loss=tf.keras.losses.mae,
 #trains the model on the data I have fed it
 model.fit(training_padded, training_labels, epochs=25)
 
-#make the model predict what the y vales will be compared to X
-pred_sentence = "U won 100000 dolars claim now with this link right here"
-sequences = tokenizer.texts_to_sequences(pred_sentence)
-pred_padded = pad_sequences(sequences, padding="post")
-
-print (pred_padded)
-
-
 #define the plot function
 def plot_predictions(prediction, true_label):
     plt.figure(figsize=(10,10))
-    plt.scatter(prediction,true_label, c="g", label= "prediction data")
+    plt.boxplot(prediction)
+    plt.legend();
+    plt.show()
     
-plot_predictions(pred_padded, 1)
+print(prediction_sequence)
+prediction_sequence = model.predict(prediction_sequence)
+
+plot_predictions(prediction_sequence, 1)
 #plot_predictions(y_pred, pred_true_label)
     
     
