@@ -8,8 +8,6 @@ import numpy as np
 labels_str = []
 message = []
 labels_int = []
-training_padded_summarised = []
-training_labels_summarised = []
 
 #loads dataset
 with open('spam.csv', 'r') as dataset:
@@ -27,46 +25,47 @@ with open('spam.csv', 'r') as dataset:
         elif "spam" in line:
                 labels_int.append(0)
 
-labels_int = tf.constant(labels_int)
+labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
 #prepares data to be used in the neural network
-X_train = message[:4460]
+X_train = message[1:4460]
 X_test = message[4460:5573]
-X_pred = message[5572:]
-y_train = labels_int[:4460]
+X_pred = message[5569:5574]
+y_train = labels_int[1:4460]
 y_test = labels_int[4460:5573]
-y_pred = labels_int[5572:]
+y_pred = labels_int[5572:5574]
+pred_true_label = 1
 
-
+print(X_pred)
 #generates tokenizerand configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 
 #creates internal knowledge about vocabulary
 tokenizer.fit_on_texts(X_train)
+tokenizer.fit_on_texts(X_test)
+tokenizer.fit_on_texts(X_pred)
 
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
 
 #creates sequence of numbers which correlate to the words in the line
 training_sequences = tokenizer.texts_to_sequences(X_train)
+prediction_sequence = tokenizer.texts_to_sequences(X_pred)
+testing_sequence = tokenizer.texts_to_sequences(X_test)
+
+print (prediction_sequence)
 
 #adds '0s' to the end of the sequences to ensure that they are all equal length
-training_padded = pad_sequences(training_sequences,
-                                padding='post')
-
-#same as above but for testing instead
-testing_sequences = tokenizer.texts_to_sequences(X_test)
-testing_padded = pad_sequences(testing_sequences, 
-                               padding='post')
-
-#same as above but for prediction
-prediction_sequence = tokenizer.texts_to_sequences(X_pred)
+training_padded = pad_sequences(training_sequences, padding='post')
+testing_padded = pad_sequences(testing_sequence, padding='post')
 
 #creates arrays for every value that will be used
 training_padded = np.array(training_padded)
 training_labels = np.array(y_train)
 testing_padded = np.array(testing_padded)
 testing_labels = np.array(y_test)
+prediction_array = np.array(prediction_sequence)
+pred_true_label = np.array(pred_true_label)
 
 #creating the model
 model = tf.keras.Sequential([
@@ -87,6 +86,9 @@ model.compile(loss=tf.keras.losses.mae,
 #trains the model on the data I have fed it
 model.fit(training_padded, training_labels, epochs=25)
 
+#plot_predictions(y_pred, pred_true_label)
+predicted_sequence = model.predict(prediction_array)
+
 #define the plot function
 def plot_predictions(prediction, true_label):
     plt.figure(figsize=(10,10))
@@ -94,28 +96,4 @@ def plot_predictions(prediction, true_label):
     plt.legend();
     plt.show()
     
-print(prediction_sequence)
-prediction_sequence = model.predict(prediction_sequence)
-
-plot_predictions(prediction_sequence, 1)
-#plot_predictions(y_pred, pred_true_label)
-    
-    
-
-
-
-
-
-def black():
-    def plot_predictions(test_data=testing_padded, test_labels=testing_labels, 
-                         predictions= y_pred):
-        plt.figure(figsize=(10,10))
-        #plot testing data
-        plt.scatter(test_data,test_labels, c="g", label= "Testing data")
-        #plot prediction vs testing
-        plt.scatter(test_data, predictions, c="r", label="Predictions")
-        plt.legend();
-        plt.show()
-    
-    plot_predictions(test_data=testing_padded, test_labels=testing_labels, 
-                 predictions= y_pred)
+plot_predictions(predicted_sequence, pred_true_label)
