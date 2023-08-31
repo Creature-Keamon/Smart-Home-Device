@@ -25,15 +25,15 @@ with open('spam.csv', 'r') as dataset:
         elif "spam" in line:
                 labels_int.append(0)
 
-labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
+labels_int = tf.constant(labels_int)
 
 #prepares data to be used in the neural network
 X_train = message[1:4460]
 X_test = message[4460:5573]
-X_pred = message[5569:5574]
+X_pred = message[5572:]
 y_train = labels_int[1:4460]
-y_test = labels_int[4460:5573]
-y_pred = labels_int[5572:5574]
+y_test = labels_int[4460:5572]
+y_pred = labels_int[5572:]
 pred_true_label = 1
 
 print(X_pred)
