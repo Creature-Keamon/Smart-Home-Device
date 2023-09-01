@@ -1,3 +1,4 @@
+from cProfile import label
 import tensorflow as tf
 import csv
 import matplotlib.pyplot as plt
@@ -30,13 +31,11 @@ labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 #prepares data to be used in the neural network
 X_train = message[1:4460]
 X_test = message[4460:5573]
-X_pred = message[5569:5574]
 y_train = labels_int[1:4460]
 y_test = labels_int[4460:5573]
-y_pred = labels_int[5572:5574]
-pred_true_label = 1
+X_pred = ["reply to this message to recieve a free $200 iTunes gift card!"]
+y_pred = 0
 
-print(X_pred)
 #generates tokenizerand configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 
@@ -53,8 +52,6 @@ training_sequences = tokenizer.texts_to_sequences(X_train)
 prediction_sequence = tokenizer.texts_to_sequences(X_pred)
 testing_sequence = tokenizer.texts_to_sequences(X_test)
 
-print (prediction_sequence)
-
 #adds '0s' to the end of the sequences to ensure that they are all equal length
 training_padded = pad_sequences(training_sequences, padding='post')
 testing_padded = pad_sequences(testing_sequence, padding='post')
@@ -65,7 +62,6 @@ training_labels = np.array(y_train)
 testing_padded = np.array(testing_padded)
 testing_labels = np.array(y_test)
 prediction_array = np.array(prediction_sequence)
-pred_true_label = np.array(pred_true_label)
 
 #creating the model
 model = tf.keras.Sequential([
@@ -87,13 +83,15 @@ model.compile(loss=tf.keras.losses.mae,
 model.fit(training_padded, training_labels, epochs=25)
 
 #plot_predictions(y_pred, pred_true_label)
-predicted_sequence = model.predict(prediction_array)
+predicted_sequence = model.predict(prediction_sequence)
 
-#define the plot function
+#define the graphing plot function
 def plot_predictions(prediction, true_label):
     plt.figure(figsize=(10,10))
-    plt.boxplot(prediction)
+    plt.scatter(prediction, y_pred, c="g", label= "prediction")
+    plt.xticks(np.arange(-0.1, 1.1, step=0.2))
     plt.legend();
     plt.show()
-    
-plot_predictions(predicted_sequence, pred_true_label)
+
+#run the grapher
+plot_predictions(predicted_sequence, y_pred)
