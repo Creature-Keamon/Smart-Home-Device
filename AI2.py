@@ -42,7 +42,7 @@ tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 #creates internal knowledge about vocabulary
 tokenizer.fit_on_texts(X_train)
 tokenizer.fit_on_texts(X_test)
-tokenizer.fit_on_texts(X_pred)
+tokenizer.fit_on_texts(X_pred) 
 
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
