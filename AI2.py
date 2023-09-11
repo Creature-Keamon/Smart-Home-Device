@@ -83,7 +83,7 @@ model.compile(loss=tf.keras.losses.mae,
 model.fit(training_padded, training_labels, epochs=25)
 
 #plot_predictions(y_pred, pred_true_label)
-predicted_sequence = model.predict(prediction_sequence)
+predicted_sequence = model.predict(prediction_array)
 
 #define the graphing plot function
 def plot_predictions(prediction, true_label):
@@ -95,3 +95,12 @@ def plot_predictions(prediction, true_label):
 
 #run the grapher
 plot_predictions(predicted_sequence, y_pred)
+
+#predicting a user input of text
+user_text = input("input your text")
+
+user_sequence = tokenizer.texts_to_sequences(user_text)
+user_array = np.array(user_sequence)
+predict_user_sequence = model.predict(user_array)
+
+plot_predictions(predict_user_sequence, y_pred)
