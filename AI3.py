@@ -75,20 +75,6 @@ model1 = tf.keras.Sequential([
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
-model2 = tf.keras.Sequential([
-    tf.keras.layers.Embedding(999, 20),
-    tf.keras.layers.GlobalAveragePooling1D(),
-    tf.keras.layers.Dense(50, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-
-model3 = tf.keras.Sequential([
-    tf.keras.layers.Embedding(999, 20),
-    tf.keras.layers.GlobalAveragePooling1D(),
-    tf.keras.layers.Dense(24, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-
 #view the summary of the model
 model1.summary()
 
@@ -96,64 +82,45 @@ model1.summary()
 model1.compile(loss=tf.keras.losses.mae,
                optimizer=tf.keras.optimizers.SGD(),
                metrics=["mae"])
-
-model2.compile(loss=tf.keras.losses.mae,
-               optimizer=tf.keras.optimizers.SGD(),
-               metrics=["mae"])
-
-model3.compile(loss=tf.keras.losses.mae,
-               optimizer=tf.keras.optimizers.SGD(),
-               metrics=["mae"])
-
 #trains the model on the data I have fed it
 model1.fit(training_padded, training_labels, epochs=100)
-model2.fit(training_padded, training_labels, epochs=100)
-model3.fit(training_padded, training_labels, epochs=500)
 
 #predict model performance
 predicted_sequence1 = model1.predict(prediction_array)
-predicted_sequence2 = model2.predict(prediction_array)
-predicted_sequence3 = model3.predict(prediction_array)
-
-print(predicted_sequence1, predicted_sequence2, predicted_sequence3)
 
 #calculate mean absolute error and square errors of predictions
 mae_1 = keras.losses.MAE(y_test, predicted_sequence1)
 mse_1 = keras.losses.MSE(y_test, predicted_sequence1)
-mae_2 = keras.losses.MAE(y_test, predicted_sequence2)
-mse_2 = keras.losses.MSE(y_test, predicted_sequence2)
-mae_3 = keras.losses.MAE(y_test, predicted_sequence3)
-mse_3 = keras.losses.MSE(y_test, predicted_sequence3)
-
-#prepare results into a nice list
-model_results = [["model 1", mae_1.numpy(), mse_1.numpy()],
-                 ["model 2", mae_2.numpy(), mse_2.numpy()],
-                 ["model 3", mae_3.numpy(), mse_3.numpy()]]
-
-#put the list into a table
-all_results = pd.DataFrame(model_results, columns = ["model", "mae", "mse"])
-
-# print table
-print(all_results)
 
 #define the graphing plot function
 def plot_predictions(prediction, true_label):
-    plt.figure(figsize=(6,2.5))
-    plt.scatter(prediction, y_pred, c="g", label= "prediction")
-    plt.xticks(np.arange(0, 1, step=0.2))
+    plt.figure(figsize=(6,2.5)) #sets window size
+    plt.scatter(prediction, y_pred, c="g", label= "prediction") #places point on the graph
+    plt.xticks(np.arange(0, 1, step=0.2)) #sets graph to show between 0 and 1
     for i, txt in enumerate(prediction):
-        plt.annotate(txt, ((prediction-0.2), (y_pred+0.005)))
+        plt.annotate(txt, ((prediction-0.2), (y_pred+0.005))) # shows the point's value on the graph
     plt.legend();
     plt.show()
 
 #run the grapher
-plot_predictions(predicted_sequence, y_pred)
+plot_predictions(predicted_sequence1, y_pred)
 
-#predicting a user input of text
-user_text = input("input your text")
-
-user_sequence = tokenizer.texts_to_sequences(user_text)
-user_array = np.array(user_sequence)
-predict_user_sequence = model.predict(user_array)
-
-plot_predictions(predict_user_sequence, y_pred)
+#determines the next action based on if the user typed "Y", "N" or something else
+while True:
+    #asks user if they want to save
+    plot_input = input("Do you wish to save the model with it's current performance? Y/N").upper()
+    
+    if plot_input == "Y":
+        #Saving the model
+        model1.save("spam_detection_model")
+        model1.save("spam_detection_model.h5")
+        print("model saved as SavedModel and also HDF5")
+        exit()
+    
+    
+    elif plot_input == "N":
+        print("Alright Then")
+        exit()
+    
+    else:
+        print("Try again")

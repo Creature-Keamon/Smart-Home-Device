@@ -61,3 +61,4 @@ mae = tf.keras.losses.MAE(y_true=y_test, y_pred=tf.squeeze(y_pred))
 
 #calculate the mean square error (MSE) between test and predictions
 mse = tf.keras.losses.MSE(y_true=y_test, y_pred=tf.squeeze(y_pred))
+
