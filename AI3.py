@@ -10,7 +10,9 @@ from keras.utils import pad_sequences
 import numpy as np
 
 labels_str = []
+labels_str2 = []
 message = []
+message2 = []
 labels_int = []
 
 #loads dataset
@@ -28,6 +30,21 @@ with open('spam.csv', 'r') as dataset:
                 labels_int.append(1)
         elif "spam" in line:
                 labels_int.append(0)
+                
+with open('emails.csv', 'r') as dataset2:
+    csv_reader2 = csv.reader(dataset2)
+    
+    #splits dataset into two lists
+    for line in csv_reader2:
+        message2.append(line[0])
+        labels_str2.append(line[1])
+    
+    #creates a new list and adds 1s and 0s to it based on "1"s and "0"s in labels_str2 respectively
+    for line in labels_str2:
+        if "0" in line:
+                labels_int.append(1)
+        elif "1" in line:
+                labels_int.append(0)
 
 labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
@@ -36,10 +53,10 @@ X_train = message[1:4460]
 X_test = message[4460:5573]
 y_train = labels_int[1:4460]
 y_test = labels_int[4460:5573]
-X_pred = ["reply to this message to recieve a free $200 iTunes gift card!"]
-y_pred = 0
+X_pred = ["Rofl. Its true to its name"]
+y_pred = [0,0]
 
-#generates tokenizerand configures it
+#generates tokenizer and configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 
 #creates internal knowledge about vocabulary
@@ -66,13 +83,13 @@ testing_padded = np.array(testing_padded)
 testing_labels = np.array(y_test)
 prediction_array = np.array(prediction_sequence)
 
+
 #creating the model(s)
 model1 = tf.keras.Sequential([
     tf.keras.layers.Embedding(999, 20),
     tf.keras.layers.GlobalAveragePooling1D(),
-    tf.keras.layers.Dense(24, activation='relu'),
-    tf.keras.layers.Dense(10, activation='sigmoid'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
+    tf.keras.layers.Dense(1000, input_shape=[1]),
+    tf.keras.layers.Dense(1, input_shape=[1])
 ])
 
 #view the summary of the model
@@ -80,30 +97,28 @@ model1.summary()
 
 #compiles the model (tells the model how wrong it is)
 model1.compile(loss=tf.keras.losses.mae,
-               optimizer=tf.keras.optimizers.SGD(),
-               metrics=["mae"])
+                optimizer=tf.keras.optimizers.Adam(),
+                metrics=["mse"])
 #trains the model on the data I have fed it
 model1.fit(training_padded, training_labels, epochs=100)
 
 #predict model performance
-predicted_sequence1 = model1.predict(prediction_array)
+predicted_sequence = model1.predict(prediction_array)
 
-#calculate mean absolute error and square errors of predictions
-mae_1 = keras.losses.MAE(y_test, predicted_sequence1)
-mse_1 = keras.losses.MSE(y_test, predicted_sequence1)
+predictions = [0, predicted_sequence]
 
 #define the graphing plot function
 def plot_predictions(prediction, true_label):
     plt.figure(figsize=(6,2.5)) #sets window size
     plt.scatter(prediction, y_pred, c="g", label= "prediction") #places point on the graph
-    plt.xticks(np.arange(0, 1, step=0.2)) #sets graph to show between 0 and 1
+    plt.xticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]) #sets graph to show between 0 and 1
     for i, txt in enumerate(prediction):
-        plt.annotate(txt, ((prediction-0.2), (y_pred+0.005))) # shows the point's value on the graph
+        plt.annotate(txt, ((prediction[(i)]), (y_pred[(i)]))) # shows the point's value on the graph
     plt.legend();
     plt.show()
 
 #run the grapher
-plot_predictions(predicted_sequence1, y_pred)
+plot_predictions(predictions, y_pred)
 
 #determines the next action based on if the user typed "Y", "N" or something else
 while True:
