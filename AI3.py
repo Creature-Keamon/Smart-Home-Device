@@ -27,33 +27,24 @@ with open('spam.csv', 'r') as dataset:
     #creates a new list and adds 1s and 0s to it based on "ham"s and "spam"s in labels_str respectively
     for line in labels_str:
         if "ham" in line:
-                labels_int.append(1)
-        elif "spam" in line:
                 labels_int.append(0)
+        elif "spam" in line:
+                labels_int.append(1)
                 
 with open('emails.csv', 'r') as dataset2:
     csv_reader2 = csv.reader(dataset2)
     
-    #splits dataset into two lists
     for line in csv_reader2:
-        message2.append(line[0])
-        labels_str2.append(line[1])
-    
-    #creates a new list and adds 1s and 0s to it based on "1"s and "0"s in labels_str2 respectively
-    for line in labels_str2:
-        if "0" in line:
-                labels_int.append(1)
-        elif "1" in line:
-                labels_int.append(0)
+        labels_int.append(line[1])
+        message.append(line[0])
 
 labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
 #prepares data to be used in the neural network
-X_train = message[1:4460]
-X_test = message[4460:5573]
-y_train = labels_int[1:4460]
-y_test = labels_int[4460:5573]
-X_pred = ["Rofl. Its true to its name"]
+X_train = message[0:11302]
+y_train = labels_int[0:11302]
+X_pred = message[11302:11303] # target = 0
+X2_pred = message[11303:11304] #target = 1
 y_pred = [0,0]
 
 #generates tokenizer and configures it
@@ -61,8 +52,8 @@ tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 
 #creates internal knowledge about vocabulary
 tokenizer.fit_on_texts(X_train)
-tokenizer.fit_on_texts(X_test)
 tokenizer.fit_on_texts(X_pred) 
+tokenizer.fit_on_texts(X2_pred) 
 
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
@@ -70,25 +61,23 @@ word_index = tokenizer.word_index
 #creates sequence of numbers which correlate to the words in the line
 training_sequences = tokenizer.texts_to_sequences(X_train)
 prediction_sequence = tokenizer.texts_to_sequences(X_pred)
-testing_sequence = tokenizer.texts_to_sequences(X_test)
+prediction_sequence2 = tokenizer.texts_to_sequences(X2_pred)
 
 #adds '0s' to the end of the sequences to ensure that they are all equal length
 training_padded = pad_sequences(training_sequences, padding='post')
-testing_padded = pad_sequences(testing_sequence, padding='post')
-
 #creates arrays for every value that will be used
 training_padded = np.array(training_padded)
 training_labels = np.array(y_train)
-testing_padded = np.array(testing_padded)
-testing_labels = np.array(y_test)
 prediction_array = np.array(prediction_sequence)
+prediction_array2 = np.array(prediction_sequence2)
 
 
 #creating the model(s)
 model1 = tf.keras.Sequential([
     tf.keras.layers.Embedding(999, 20),
     tf.keras.layers.GlobalAveragePooling1D(),
-    tf.keras.layers.Dense(1000, input_shape=[1]),
+    tf.keras.layers.Dense(100, input_shape=[1]),
+    tf.keras.layers.Dense(100, input_shape=[1]),
     tf.keras.layers.Dense(1, input_shape=[1])
 ])
 
@@ -97,15 +86,10 @@ model1.summary()
 
 #compiles the model (tells the model how wrong it is)
 model1.compile(loss=tf.keras.losses.mae,
-                optimizer=tf.keras.optimizers.Adam(),
-                metrics=["mse"])
+                optimizer=tf.keras.optimizers.SGD(),
+                metrics=["mae"])
 #trains the model on the data I have fed it
-model1.fit(training_padded, training_labels, epochs=100)
-
-#predict model performance
-predicted_sequence = model1.predict(prediction_array)
-
-predictions = [0, predicted_sequence]
+model1.fit(training_padded, training_labels, epochs=200)
 
 #define the graphing plot function
 def plot_predictions(prediction, true_label):
@@ -117,8 +101,15 @@ def plot_predictions(prediction, true_label):
     plt.legend();
     plt.show()
 
+#predict model performance
+predicted_sequence = model1.predict(prediction_array)
+predictions = [0, predicted_sequence]
 #run the grapher
 plot_predictions(predictions, y_pred)
+
+predicted_sequence2 = model1.predict(prediction_array2)
+predictions2 = [1, predicted_sequence2]
+plot_predictions(predictions2, y_pred)
 
 #determines the next action based on if the user typed "Y", "N" or something else
 while True:
