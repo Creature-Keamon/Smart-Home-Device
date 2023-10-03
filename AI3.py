@@ -44,8 +44,11 @@ labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 X_train = message[0:11302]
 y_train = labels_int[0:11302]
 X_pred = message[11302:11303] # target = 0
-X2_pred = message[11303:11304] #target = 1
+X2_pred = message[34:35] #target = 1
 y_pred = [0,0]
+
+print (X_pred)
+print(X2_pred)
 
 #generates tokenizer and configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
@@ -74,7 +77,7 @@ prediction_array2 = np.array(prediction_sequence2)
 
 #creating the model(s)
 model1 = tf.keras.Sequential([
-    tf.keras.layers.Embedding(999, 20),
+    tf.keras.layers.Embedding(1000, 20),
     tf.keras.layers.GlobalAveragePooling1D(),
     tf.keras.layers.Dense(100, input_shape=[1]),
     tf.keras.layers.Dense(100, input_shape=[1]),
@@ -89,7 +92,7 @@ model1.compile(loss=tf.keras.losses.mae,
                 optimizer=tf.keras.optimizers.SGD(),
                 metrics=["mae"])
 #trains the model on the data I have fed it
-model1.fit(training_padded, training_labels, epochs=200)
+model1.fit(training_padded, training_labels, epochs=100)
 
 #define the graphing plot function
 def plot_predictions(prediction, true_label):
