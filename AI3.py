@@ -9,6 +9,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 import numpy as np
 import random
+import json
 
 labels_str = []
 labels_str2 = []
@@ -51,6 +52,9 @@ tokenizer.fit_on_texts(X2_pred)
 
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
+
+with open('word_index.json', 'w') as f:
+    json.dump(word_index, f)
 
 #creates sequence of numbers which correlate to the words in the line
 training_sequences = tokenizer.texts_to_sequences(X_train)
