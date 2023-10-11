@@ -34,19 +34,26 @@ def user_output(prediction):
         print("Your message is very likely to be spam!")
 
 #load in the model
-model_load = tf.keras.models.load_model("spam_detection_model")
+model_load = tf.keras.models.load_model("spam_detection_model.h5")
+
+
+
+model_load.summary()
 
 tokenizer = Tokenizer(num_words= 300, oov_token="<OOV>")
 
 #gets user input
 user_input = input("Type your message that you want to be checked for spam")
 user_list.append(user_input)
+print(user_list)
 
 #preprocesses the user input into tensors
 tokenizer.fit_on_texts(user_list)
 word_index = tokenizer.word_index
 user_sequence = tokenizer.texts_to_sequences(user_list)
+print(user_sequence)
 user_array = np.array(user_sequence)
+print(user_array)
 
 model_load.compile(loss='binary_crossentropy',
                   optimizer= tf.keras.optimizers.Adam(),
@@ -54,6 +61,7 @@ model_load.compile(loss='binary_crossentropy',
 
 #makes prediction about the user's input
 user_predict = model_load.predict(user_array)
+print(user_predict)
 
 #runs grapher
 plot_predictions(user_predict, y_value)
