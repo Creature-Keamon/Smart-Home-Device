@@ -11,6 +11,7 @@ import numpy as np
 import random
 import json
 
+#defines lists
 labels_str = []
 labels_str2 = []
 message = []
@@ -21,7 +22,7 @@ labels_int = []
 with open('full_spam_set.csv', 'r', encoding='utf-8') as dataset:
     csv_reader = csv.reader(dataset)
     
-    #splits dataset into two lists
+    #splits dataset into two lists, message 
     for line in csv_reader:
         message.append(line[0])
         labels_int.append(line[1])
