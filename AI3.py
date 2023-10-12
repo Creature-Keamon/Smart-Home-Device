@@ -29,14 +29,16 @@ with open('full_spam_set.csv', 'r', encoding='utf-8') as dataset:
 labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
 #prepares data to be used in the neural network
-X_train = message[0:5574]
-y_train = labels_int[0:5574]
+X_train = message[0:8960]
+y_train = labels_int[0:8960]
 
-X_test = message[5574:9043]
-y_test = labels_int[5574:9043]
+X_test = message[8960:11200]
+y_test = labels_int[8960:11200]
 
 X_pred = message[11286:11287] # target = 1
 X2_pred = message[11288:11289] #target = 0
+X3_pred = ["""Ur HMV Quiz cash-balance is currently $500 - 
+           to maximize ur cash-in now send HMV1 to 86688 only 150p/msg"""] # target = 1 (AI has had particular difficulty with this one)
 y_pred = [0,0]
 
 #generates tokenizer and configures it
@@ -49,6 +51,7 @@ tokenizer.fit_on_texts(X_test)
 
 tokenizer.fit_on_texts(X_pred) 
 tokenizer.fit_on_texts(X2_pred) 
+tokenizer.fit_on_texts(X3_pred) 
 
 #tokenises the test (assigns numerical values to every word)
 word_index = tokenizer.word_index
@@ -60,6 +63,7 @@ testing_sequence = tokenizer.texts_to_sequences(X_test)
 
 prediction_sequence = tokenizer.texts_to_sequences(X_pred)
 prediction_sequence2 = tokenizer.texts_to_sequences(X2_pred)
+prediction_sequence3 = tokenizer.texts_to_sequences(X3_pred)
 
 #adds '0s' to the end of the sequences to ensure that they are all equal length
 training_padded = pad_sequences(training_sequences, padding='post')
@@ -75,6 +79,7 @@ testing_labels = np.array(y_test)
 
 prediction_array = np.array(prediction_sequence)
 prediction_array2 = np.array(prediction_sequence2)
+prediction_array3 = np.array(prediction_sequence3)
 
 
 #creating the model(s)
@@ -113,14 +118,19 @@ def plot_predictions(prediction_values, true_label):
 #predict model performance
 predicted_sequence = model1.predict(prediction_array)
 predictions = [1, predicted_sequence]
-#run the grapher
 print(predictions)
+#run the grapher
 plot_predictions(predictions, y_pred)
 
 predicted_sequence2 = model1.predict(prediction_array2)
 predictions2 = [0, predicted_sequence2]
 print(predictions2)
 plot_predictions(predictions2, y_pred)
+
+predicted_sequence3 = model1.predict(prediction_array3)
+predictions3 = [1, predicted_sequence3]
+print(predictions3)
+plot_predictions(predictions3, y_pred)
 
 #determines the next action based on if the user typed "Y", "N" or something else
 while True:
@@ -129,7 +139,7 @@ while True:
     
     if plot_input == "Y":
         #Saving the model
-        model1.save("spam_detection_model")
+        model1.save("spam_detection_model.keras")
         print("model saved")
         exit()
     
