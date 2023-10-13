@@ -19,7 +19,7 @@ message2 = []
 labels_int = []
 
 #loads dataset
-with open('full_spam_set2.csv', 'r', encoding='utf-8') as dataset:
+with open('full_spam_set.csv', 'r', encoding='utf-8') as dataset:
     csv_reader = csv.reader(dataset)
     
     #splits dataset into two lists, message 
@@ -30,8 +30,8 @@ with open('full_spam_set2.csv', 'r', encoding='utf-8') as dataset:
 labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
 #prepares data to be used in the neural network
-X_train = message[0:11200]
-y_train = labels_int[0:11200]
+X_train = message[0:8960]
+y_train = labels_int[0:8960]
 
 X_test = message[8960:11200]
 y_test = labels_int[8960:11200]

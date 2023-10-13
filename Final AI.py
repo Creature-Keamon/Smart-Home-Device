@@ -53,7 +53,7 @@ def user_output(prediction):
         print("Your message is probably legitimate (", 100-prediction*100, "% chance)")
     elif prediction > 0.5 and prediction < 0.75:
         print("Your message is probably spam (", prediction*100, "% chance)")
-    elif prediction > 0.75 and prediction < 1:
+    elif prediction > 0.75:
         print("Your message is very likely to be spam! (", prediction*100, "% chance)")
 
 #load in the model
