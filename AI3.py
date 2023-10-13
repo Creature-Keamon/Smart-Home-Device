@@ -19,7 +19,7 @@ message2 = []
 labels_int = []
 
 #loads dataset
-with open('full_spam_set.csv', 'r', encoding='utf-8') as dataset:
+with open('full_spam_set2.csv', 'r', encoding='utf-8') as dataset:
     csv_reader = csv.reader(dataset)
     
     #splits dataset into two lists, message 
@@ -30,8 +30,8 @@ with open('full_spam_set.csv', 'r', encoding='utf-8') as dataset:
 labels_int = tf.convert_to_tensor(np.array(labels_int), dtype=tf.int32)
 
 #prepares data to be used in the neural network
-X_train = message[0:8960]
-y_train = labels_int[0:8960]
+X_train = message[0:11200]
+y_train = labels_int[0:11200]
 
 X_test = message[8960:11200]
 y_test = labels_int[8960:11200]
@@ -45,7 +45,7 @@ y_pred = [0,0]
 #generates tokenizer and configures it
 tokenizer = Tokenizer(num_words= 20, oov_token="<OOV>")
 
-#creates internal knowledge about vocabulary
+#tokenises the text (assigns numerical values to every word)
 tokenizer.fit_on_texts(X_train)
 
 tokenizer.fit_on_texts(X_test) 
@@ -54,7 +54,7 @@ tokenizer.fit_on_texts(X_pred)
 tokenizer.fit_on_texts(X2_pred) 
 tokenizer.fit_on_texts(X3_pred) 
 
-#tokenises the test (assigns numerical values to every word)
+#creates internal knowledge about each word and their values
 word_index = tokenizer.word_index
 
 #creates sequence of numbers which correlate to the words in the line
@@ -95,10 +95,11 @@ model1 = tf.keras.Sequential([
 #view the summary of the model
 model1.summary()
 
-#compiles the model (tells the model how wrong it is)
+#compiles the model (establishes how to tell the model how wrong it is)
 model1.compile(loss='binary_crossentropy',
                 optimizer= tf.keras.optimizers.Adam(learning_rate=0.001),
                 metrics=["accuracy"])
+
 #trains the model on the data I have fed it
 model1.fit(training_padded, 
            training_labels, 

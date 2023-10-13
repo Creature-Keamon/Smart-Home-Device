@@ -6,7 +6,7 @@ labels_str = []
 message = []
 labels_int = []
  
-# original lists
+#imports original lists
 with open('spam.csv', 'r') as dataset:
     csv_reader = csv.reader(dataset)
     
@@ -41,4 +41,4 @@ dict = {'message': list1, 'label': list2}
 df = pd.DataFrame(dict)
 
 #turns dataframe into a csv
-df.to_csv('full_spam_set.csv', index=False)
+df.to_csv('full_spam_set2.csv', index=False)

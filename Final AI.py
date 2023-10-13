@@ -9,6 +9,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 import numpy as np
 import json
+import os
 
 user_list = []
 y_value = [0]
@@ -44,18 +45,16 @@ def plot_predictions(prediction, y_value):
     plt.legend();
     plt.show()
 
-
-
-#defines the output text function
+#defines the output text function (calculates percentage chance of spam)
 def user_output(prediction):
     if prediction < 0.25:
-        print("Your message is very likely to be legitimate! (", 100-prediction[0]*100, "% chance)")
+        print("Your message is very likely to be legitimate! (", 100-prediction*100, "% chance)")
     elif prediction > 0.25 and prediction < 0.5:
-        print("Your message is probably legitimate (", 100-prediction[0]*100, "% chance)")
+        print("Your message is probably legitimate (", 100-prediction*100, "% chance)")
     elif prediction > 0.5 and prediction < 0.75:
-        print("Your message is probably spam (", prediction[0]*100, "% chance)")
+        print("Your message is probably spam (", prediction*100, "% chance)")
     elif prediction > 0.75 and prediction < 1:
-        print("Your message is very likely to be spam! (", prediction[0]*100, "% chance)")
+        print("Your message is very likely to be spam! (", prediction*100, "% chance)")
 
 #load in the model
 model_load = tf.keras.models.load_model("spam_detection_model.keras")
@@ -67,7 +66,8 @@ model_load.summary()
 tokenizer = Tokenizer(num_words= 300, oov_token="<OOV>")
 
 #gets user input
-user_input = input("Paste your message here you want to be tested")
+user_input = input("Paste your message here you want to be tested (please ensure it has text or else the AI will not know how to predict it): ")
+     
 user_list.append(user_input)
 print(user_list)
 
@@ -92,10 +92,12 @@ model_load.evaluate(evaluation_padded, evaluation_labels)
 
 #makes prediction about the user's input
 user_predict = model_load.predict(user_array)
-print(user_predict)
 
-user_output(user_predict)
+prediction_percentage = user_predict[0]
+
+#calls the output text function
+user_output(prediction_percentage)
 
 #runs grapher
-plot_predictions(user_predict, y_value)
+plot_predictions(prediction_percentage, y_value)
 
